@@ -3,122 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的 HackMD 筆記與匿名交流空間</title>
+    <title>匿名留言板</title>
     <style>
         :root {
-            --bg-color: #f8f9fa;
+            --bg-color: #fafafa;
             --card-bg: #ffffff;
-            --text-main: #212529;
-            --text-muted: #6c757d;
-            --accent-color: #4a90e2; 
-            --accent-hover: #357abd;
-            --success-color: #2ec4b6;
-            --border-radius: 16px;
+            --text-main: #1a1a1a;
+            --text-muted: #737373;
+            --border-color: #e5e5e5;
+            --accent-color: #000000; /* 極簡黑 */
+            --success-color: #16a34a;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg-color);
             color: var(--text-main);
-            line-height: 1.6;
-            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
 
         .container {
-            max-width: 680px;
-            margin: 0 auto;
+            width: 100%;
+            max-width: 500px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
         }
 
         header {
-            text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         header h1 {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
-            margin-bottom: 12px;
         }
 
         header p {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
-        h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #333;
-        }
-
-        .section-block {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            margin-bottom: 24px;
-            border: 1px solid rgba(0,0,0,0.03);
-        }
-
-        /* 筆記連結樣式 */
-        .note-link {
-            display: block;
-            padding: 16px;
-            border: 1px solid #e9ecef;
-            border-radius: 10px;
-            text-decoration: none;
-            color: var(--text-main);
-            font-weight: 500;
-            transition: all 0.2s ease;
-            margin-bottom: 12px;
-        }
-
-        .note-link:hover {
-            border-color: var(--accent-color);
-            background-color: rgba(74, 144, 226, 0.03);
-            transform: translateX(4px);
-        }
-
-        /* 表單樣式 */
         .form-group {
             margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            color: #495057;
         }
 
         .form-control {
             width: 100%;
             padding: 14px;
-            border: 1px solid #dee2e6;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             font-size: 0.95rem;
+            color: var(--text-main);
             transition: all 0.2s;
-            background-color: #fff;
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
         }
 
         textarea.form-control {
             resize: vertical;
-            min-height: 140px;
+            min-height: 160px;
         }
 
         .submit-btn {
@@ -126,40 +88,34 @@
             color: white;
             border: none;
             padding: 14px 24px;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.95rem;
+            font-weight: 500;
             border-radius: 8px;
             cursor: pointer;
             width: 100%;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
         }
 
         .submit-btn:hover {
-            background-color: var(--accent-hover);
+            opacity: 0.85;
         }
 
-        /* 提示標籤 */
-        .anonymous-badge {
-            display: inline-block;
-            background: #fff3cd;
-            color: #856404;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 15px;
-            font-weight: 500;
+        .submit-btn:disabled {
+            background: #a3a3a3;
+            cursor: not-allowed;
         }
 
-        /* 成功彈窗提示 */
         .success-message {
             display: none;
-            background-color: rgba(46, 196, 182, 0.15);
-            color: #1b7a70;
-            padding: 15px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: var(--success-color);
+            padding: 14px;
             border-radius: 8px;
             margin-bottom: 20px;
             text-align: center;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -167,43 +123,20 @@
 
     <div class="container">
         <header>
-            <h1>💡 筆記交流空間</h1>
-            <p>點擊下方閱讀 HackMD 筆記，並留下您最真實的匿名建議</p>
+            <h1>匿名意見與回饋</h1>
+            <p>此表單完全匿名，請放心地留下你的修正建議或想法。</p>
         </header>
 
-        <div class="section-block">
-            <h2>我的 HackMD 筆記</h2>
+        <div class="success-message" id="successMsg">您的匿名回饋已成功傳送，謝謝！</div>
+
+        <form id="feedbackForm" action="https://formspree.io/f/你的FormspreeID" method="POST">
             
-            <a href="https://hackmd.io/@你的帳號/筆記1" target="_blank" class="note-link">👉 筆記一：網頁前端開發入門</a>
-            <a href="https://hackmd.io/@你的帳號/筆記2" target="_blank" class="note-link">👉 筆記二：Python 爬蟲實戰紀錄</a>
-        </div>
+            <div class="form-group">
+                <textarea id="feedback" name="feedback" class="form-control" placeholder="請在此輸入您的建議內容..." required></textarea>
+            </div>
 
-        <div class="section-block">
-            <h2>匿名意見箱</h2>
-            <div class="anonymous-badge">🔒 系統已自動加密，此表單完全匿名，不會收集任何個人資料</div>
-            
-            <div class="success-message" id="successMsg">🎉 匿名建議已成功送出！感謝你的回饋 ❤</div>
-
-            <form id="feedbackForm" action="https://formspree.io/f/你的表單ID" method="POST">
-                
-                <div class="form-group">
-                    <label for="note-title">針對哪篇筆記？</label>
-                    <select id="note-title" name="note_title" class="form-control" required>
-                        <option value="" disabled selected>-- 請選擇相關筆記 --</option>
-                        <option value="筆記一">筆記一：網頁前端開發入門</option>
-                        <option value="筆記二">筆記二：Python 爬蟲實戰紀錄</option>
-                        <option value="通用建議">通用建議 / 想對作者說的話</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="feedback">具體回饋與修正建議</label>
-                    <textarea id="feedback" name="feedback" class="form-control" placeholder="請放心地寫下你想說的，不用擔心被發現是誰..." required></textarea>
-                </div>
-
-                <button type="submit" class="submit-btn" id="submitBtn">安全匿名送出</button>
-            </form>
-        </div>
+            <button type="submit" class="submit-btn" id="submitBtn">送出匿名回饋</button>
+        </form>
     </div>
 
     <script>
@@ -212,9 +145,9 @@
         const submitBtn = document.getElementById('submitBtn');
 
         form.addEventListener('submit', async function(e) {
-            e.preventDefault(); // 阻止網頁跳轉
+            e.preventDefault(); 
             
-            submitBtn.textContent = '正在安全傳送...';
+            submitBtn.textContent = '傳送中...';
             submitBtn.disabled = true;
 
             const formData = new FormData(form);
@@ -227,16 +160,15 @@
                 });
 
                 if (response.ok) {
-                    successMsg.style.display = 'block'; // 顯示成功訊息
-                    form.reset(); // 清空輸入框
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+                    successMsg.style.display = 'block'; 
+                    form.reset(); 
                 } else {
-                    alert('傳送失敗，請稍後再試。');
+                    alert('傳送失敗，請檢查設定。');
                 }
             } catch (error) {
-                alert('網路錯誤，請檢查連線。');
+                alert('網路錯誤，請稍後再試。');
             } finally {
-                submitBtn.textContent = '安全匿名送出';
+                submitBtn.textContent = '送出匿名回饋';
                 submitBtn.disabled = false;
             }
         });
@@ -244,4 +176,3 @@
 
 </body>
 </html>
-
